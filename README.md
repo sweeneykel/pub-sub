@@ -3,6 +3,9 @@
 ## Goal:
 System that can upload a photo, generate and store annotations and vector embeddings. System that can search vector and document db for similar images or an image that matches a topic. Asynchronous with pub-sub architecture.
 
+## Events/Messages
+[Link to Events and Messages outline](https://docs.google.com/spreadsheets/d/1IQb-8FlekCkqSglsvnialNid2d1lZciirRWZFQ1n6fs/edit?usp=sharing)
+
 ## Overall Architecture: Upload Image Task
 **Upload Service/CLI**
 Does: Uploads Image
@@ -36,8 +39,11 @@ Does: Sends confirmation to user that task was successful
 
 		TODO
 
-## Redis: Design Choice
-At most once delivery system. Will not reattempt. Pub sub however allows concurrent processing. (No blocks)
+## Redis Pub-Sub: Design Choice
+(-)At most once delivery system. Will not reattempt if failure.
+(-)'Fire and Forget' If not subscribers, message disappears
+(+)Allows simultaneous processing. (No blocks) Unlike queuing.
+(+)Ideal for scaling systems. Unlike point-to-point.
 
 ## Tools Used:
 pub-sub, document db, vector db, asynchronous workflow, event generator for unit testing
