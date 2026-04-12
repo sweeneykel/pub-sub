@@ -6,6 +6,9 @@ System that can upload a photo, generate and store annotations and vector embedd
 ## Events/Messages
 [Link to Events and Messages outline](https://docs.google.com/spreadsheets/d/1IQb-8FlekCkqSglsvnialNid2d1lZciirRWZFQ1n6fs/edit?usp=sharing)
 
+## Schematic (By Professor Alshaykh)
+
+
 ## Overall Architecture: Upload Image Task
 **Upload Service/CLI**
 Does: Uploads Image
