@@ -7,7 +7,7 @@ System that can upload a photo, generate and store annotations and vector embedd
 [Link to Events and Messages outline](https://docs.google.com/spreadsheets/d/1IQb-8FlekCkqSglsvnialNid2d1lZciirRWZFQ1n6fs/edit?usp=sharing)
 
 ## Schematic (By Professor Alshaykh)
-
+<img width="541" height="289" alt="ec530proj2schematic" src="https://github.com/user-attachments/assets/b504be03-e0fd-4629-a361-45adf53ddfdc" />
 
 ## Overall Architecture: Upload Image Task
 **Upload Service/CLI**
