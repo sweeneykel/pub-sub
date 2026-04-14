@@ -9,12 +9,15 @@ System that can upload a photo, generate and store annotations and vector embedd
 ## Schematic (By Professor Alshaykh)
 <img width="541" height="289" alt="ec530proj2schematic" src="https://github.com/user-attachments/assets/b504be03-e0fd-4629-a361-45adf53ddfdc" />
 
-## Annotation and Embedding Connection Design Choice
+## Design Choices
+### Annotation and Embedding Connection
 Annotation and Embedding output can be kept separate or can be used to inform one another.
 Annotation can pass labels to Embedding to help shape the embedding space; to tell the embedding service what to 
-organize based on (semantic meaning or pixel similarity). 
+organize based on (semantic meaning or pixel similarity).
 
-## Redis Pub-Sub: Design Choice
+### Inheritance from Messages
+
+### Redis Pub-Sub
 (-)At most once delivery system. Will not reattempt if failure.
 
 (-)'Fire and Forget' If not subscribers, message disappears
