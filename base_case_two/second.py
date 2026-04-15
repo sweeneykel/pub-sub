@@ -1,5 +1,5 @@
 import redis
-from message_inheritance import InferenceCompletedMessage
+from src.project.message_inheritance import InferenceCompletedMessage
 import json
 
 r = redis.Redis(host="localhost", port=6379, decode_responses=True)

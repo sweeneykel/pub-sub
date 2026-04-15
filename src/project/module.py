@@ -1,0 +1,67 @@
+import redis
+from message import Message
+import logging
+
+# r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+
+class Module:
+    # sys_channels = set()
+
+    # @classmethod
+    # def get_sys_channels(cls):
+    #    return cls.sys_channels
+
+    def __init__(self, module_name: str, redis_pub_conn: redis.Redis):
+        self.module_name = module_name
+        self.redis_pub_conn = redis_pub_conn
+        self.redis_ps_conn = redis_pub_conn.pubsub()
+        self.registered_pub_channels = set()
+        self.registered_sub_channels = set()
+        # TODO: could add message type
+
+    def register_pub_channel(self, channel: str):
+        if channel in self.registered_pub_channels:
+            raise ValueError(f"Channel '{channel}' already exists")
+        self.registered_pub_channels.add(channel)
+        # Module.sys_channels.add(channel)
+
+    def publish_message(self, channel: str, message: Message):
+        if channel not in self.registered_pub_channels:
+            raise ValueError(f"Channel '{channel}' not registered to {self.module_name}")
+
+        if not isinstance(message, Message):
+            raise TypeError("Message must be of type message.")
+
+        # TODO: could add validation for message type
+
+        payload = message.to_json()
+        num_subscribers = self.redis_pub_conn.publish(channel, payload)
+
+        logger.info(f"{self.module_name} published to -> {channel} with {num_subscribers} subscribers: {payload}")
+
+    def register_sub_channel(self, channel:str):
+        if channel in self.registered_sub_channels:
+            raise ValueError(f"Already subscribed to '{channel}'.")
+
+        # if channel not in Module.sys_channels:
+            # raise ValueError(f"{channel} does not exist in system.")
+
+        self.registered_sub_channels.add(channel)
+        self.redis_ps_conn.subscribe(channel)
+        logger.info(f"{self.module_name} subscribed to {channel}")
+
+    # Consider creating pubsub per listener instead of per module
+    # def close_channel()
+    # def unsub_to_channel()
+
+    # def begin_listening(self):
+        # TODO !!
+
+    def to_string(self):
+        return f"{self.module_name} can publish on {', '.join(sorted(self.registered_pub_channels))}"
+
+
+

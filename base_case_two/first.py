@@ -1,4 +1,4 @@
-from message_inheritance import ImageSubmittedMessage
+from src.project.message_inheritance import ImageSubmittedMessage
 import redis
 import time
 
