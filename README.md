@@ -15,6 +15,9 @@ Annotation and Embedding output can be kept separate or can be used to inform on
 Annotation can pass labels to Embedding to help shape the embedding space; to tell the embedding service what to 
 organize based on (semantic meaning or pixel similarity).
 
+### Module Class
+Including channel formation, subscription, publishing, components??
+
 ### Inheritance from Messages
 
 ### Redis Pub-Sub
