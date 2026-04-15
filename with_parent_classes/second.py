@@ -10,6 +10,11 @@ pubsub.subscribe("ImageSubmitted")
 
 print("Waiting for messages...")
 
+
+# create module (redis.Redis, channel = r.pubsub())
+# subscribe to x channel
+# publish x message
+
 for incoming_message in pubsub.listen():  #incoming_message is type dict
     # Received: {'type': 'message', 'pattern': None, 'channel': 'sensor_updates', 'data': 'temperature:20'}
     if incoming_message['type'] == 'message':
@@ -28,5 +33,3 @@ for incoming_message in pubsub.listen():  #incoming_message is type dict
         print(f"{channel} is sending an outgoing message: {outgoing_message.to_json()}")
         #r.publish(channel, msg1.to_json())
         #print(f"{channel} published: {msg1.to_json()}")
-
-
