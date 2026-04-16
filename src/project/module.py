@@ -4,8 +4,11 @@ import logging
 
 # r = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
-logger = logging.getLogger(__name__)
+# move to main to configure for all modules
 logging.basicConfig(level=logging.INFO)
+# creates a logger named after module
+logger = logging.getLogger(__name__)
+
 
 class Module:
     # sys_channels = set()
@@ -26,7 +29,6 @@ class Module:
         if channel in self.registered_pub_channels:
             raise ValueError(f"Channel '{channel}' already exists")
         self.registered_pub_channels.add(channel)
-        # Module.sys_channels.add(channel)
 
     def publish_message(self, channel: str, message: Message):
         if channel not in self.registered_pub_channels:
@@ -46,10 +48,8 @@ class Module:
         if channel in self.registered_sub_channels:
             raise ValueError(f"Already subscribed to '{channel}'.")
 
-        # if channel not in Module.sys_channels:
-            # raise ValueError(f"{channel} does not exist in system.")
-
         self.registered_sub_channels.add(channel)
+        # Module registers interest to listen to channel messages
         self.redis_ps_conn.subscribe(channel)
         logger.info(f"{self.module_name} subscribed to {channel}")
 
