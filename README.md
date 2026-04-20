@@ -28,6 +28,7 @@ Synchronization Coupling: Are you blocking anyone?
 
 #### Redis Pub-Sub: "Ephemeral Broadcast"
 Best for: broadcasting updates in real-time, chat systems, IoT, notification event driven systems like ("do work", "update status" )
+
 (+)Ideal for scaling systems. Streamlined set-up. Subscribe to topics not nodes.
 
 (+)Allows simultaneous processing by all subscriber that receive message. 
@@ -40,6 +41,7 @@ Best for: broadcasting updates in real-time, chat systems, IoT, notification eve
 
 #### Redis Streams: "Durable System Messaging"
 Best for: systems requiring certainty of delivery or more complex message processing routines
+
 (+) Built in persistence of messages through message streams (append-only logs of messages). A subscriber can access
 message history if they connect late.
 
@@ -62,35 +64,53 @@ single class which handled multiple concerns and therefore a dependency was spre
 isolated at one point.
 
 [Infrastructure]
+
     Redis
+
 [Integration Layer]
-    RedisListener (class): handles I/O (subscribe, receive messages)
+
+    RedisListener (class): handles I/O (subscribe, receive messages) and is threaded
+
+    RedisPublisher (class): stateless
+
 [Transport Layer]
+
     Queue: buffer + boundary
+
 [Application Layer]
+
     Module (class): processes messages. This class doesn’t know about Redis. Doesn’t know about networking. Doesn’t know about
 other modules. It just consumes messages from a queue.
 
 The advantages it gave that seemed most compelling were the below;
-* swap Redis → Kafka later (modules unchanged). Redis becomes replaceable infrastructure.
-* test modules without Redis
-* queues give backpressure control. If processing is slow: you can detect it and you can scale workers
+
+(+) swap Redis → Kafka later (modules unchanged). Redis becomes replaceable infrastructure.
+
+(+) test modules without Redis 
+
+(+)queues give backpressure control. If processing is slow: you can detect it and you can scale workers
 
 The disadvantages were;
-* might be overly complex for a small system
+
+(-) might be overly complex for a small system
 
 ### Threading vs Asyncio vs Processes
 #### Threading
 Threads are lightweight execution units within a process. Due to the GIL, Python threads do not execute CPU-bound Python 
 code in parallel. However, for I/O-bound tasks (like waiting for messages), threads release the GIL while waiting, 
 allowing other threads to run. This is why threading is effective for I/O concurrency despite the GIL.
+
 (+) OS handles switching between tasks when CPU bound. Less complexity.
+
 (-) Race conditions
+
 Kept threading out of APIs so that this "service" was provided as a part of joining the system.
 
 #### Asyncio
 (+) Programmer explicitly describes how task switching occurs which can lead to...
+
 (+) ...more intentional control...
+
 (-) ...but also complexity
 
 ## Tools Used
