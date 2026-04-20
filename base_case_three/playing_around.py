@@ -1,12 +1,6 @@
-import message
-import message_inheritance
-import module
-
 import threading
 import time
 from queue import Queue
-
-
 
 # Shared queue for "incoming messages"
 message_queue = Queue()
@@ -18,7 +12,7 @@ def worker_task():
     while True:
         x += 2
         print(f"[WORKER] Value is now: {x}")
-        time.sleep(10)  # simulate long blocking work (working on some calculation)
+        time.sleep(1)  # simulate long blocking work
 
 
 def listener_task():
@@ -42,7 +36,9 @@ def simulate_incoming_messages():
 
 
 if __name__ == "__main__":
-    # Create threads; “Run this function somewhere else, concurrently”
+    # Create threads: if daemon=False (default), thread must finish before program exits
+    # That function runs independently of the main thread
+    # Threads are not fully independent — they share: memory, variables, state
     worker_thread = threading.Thread(target=worker_task, daemon=True)
     listener_thread = threading.Thread(target=listener_task, daemon=True)
     simulator_thread = threading.Thread(target=simulate_incoming_messages, daemon=True)
@@ -52,6 +48,6 @@ if __name__ == "__main__":
     listener_thread.start()
     simulator_thread.start()
 
-    # Keep main thread alive
+    # Keep main thread alive: If main thread exits → program exits → all threads die
     while True:
         time.sleep(1)
