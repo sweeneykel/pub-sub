@@ -2,7 +2,6 @@ import redis
 
 from PhotoUploadModule import PhotoUploadModule
 
-
 redis_client = redis.Redis(
     host="localhost",
     port=6379,
