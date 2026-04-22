@@ -44,7 +44,8 @@ class RedisSubscriber:
         while not self._stop_event.is_set():
             # unlike self.redis_ps_conn.listen(), .get_message() will periodically check _stop_event
             msg = self.redis_ps_conn.get_message()
-            if msg:
+            # do not include control messages in queue (like subscribe or unsubscribe)
+            if msg['type'] == 'message':
                 logger.info(f"{self.module_name} received {msg} on {self.registered_sub_channel}")
                 self.input_queue.put(msg)
                 logger.info(f"{self._thread} added {msg} to {self.input_queue}")
