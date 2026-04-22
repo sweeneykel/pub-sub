@@ -1,14 +1,23 @@
+
+
+# to do
+# labeling feature generate 10 images with boxes OR LLM COCO
+# upload completed, analysis with labels
+
 import redis
 
-from PhotoUploadModule import PhotoUploadModule
+from PhotoUploadModule import PhotoCliModule
 
-redis_client = redis.Redis(
-    host="localhost",
-    port=6379,
-    decode_responses=True,
-)
+def main():
+    redis_client = redis.Redis(
+        host="localhost",
+        port=6379,
+        decode_responses=True,
+    )
 
-uploader = PhotoUploadModule(redis_client)
+    cli = PhotoCliModule(redis_client=redis_client)
+    cli.run()
 
-uploader.upload_photo_from_path("photos/cat.jpg")
-uploader.upload_photo_from_path("photos/dog.png")
+
+if __name__ == "__main__":
+    main()
