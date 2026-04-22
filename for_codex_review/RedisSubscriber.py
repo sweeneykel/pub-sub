@@ -26,6 +26,7 @@ class RedisSubscriber:
         # Module registers interest to listen to channel messages
         if self.registered_sub_channel is None:
             self.redis_ps_conn.subscribe(channel_name)
+            self.registered_sub_channel = channel_name
             logger.info(f"{self.module_name} subscribed to {channel_name}")
             self._start()
         else:
