@@ -34,7 +34,7 @@ class RedisPublisher:
         payload = message.to_json()
         num_subscribers = self.redis.publish(channel, payload)
 
-        logger.info(f"{self.module_name} published to -> {channel} with {num_subscribers} subscribers")
+        logger.info(f"{self.module_name} published to -> channel {channel} with {num_subscribers} subscribers")
 
     def to_string(self):
         return f"{self.module_name} can publish on {', '.join(sorted(self.registered_pub_channels))}"

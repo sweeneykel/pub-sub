@@ -14,6 +14,11 @@ class Message:
     def _generate_event_id(self):
         raise NotImplementedError("Child class must define event_id logic")
 
+    def get_payload_value(self, key: str):
+        if key not in self.payload:
+            raise KeyError(f"Payload key '{key}' not found")
+        return self.payload[key]
+
     def to_json(self):
         return json.dumps({
             "type": self.type,

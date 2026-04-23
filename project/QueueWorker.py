@@ -35,8 +35,8 @@ class QueueWorker:
             try:
                 msg = self.input_queue.get(timeout=1)
                 logger.info(f"{self._thread} working on a msg")
+
                 self._process(msg)
-                #logger.info(f"{self._thread} processed {msg["image_id"]}")
 
             except queue.Empty:
                 continue

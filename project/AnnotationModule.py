@@ -9,15 +9,16 @@ from message_inheritance import ImageSubmittedMessage
 from message_inheritance import AnnotationCompletedMessage
 
 # This is the primary function of the Annotation Module and is what the QueueWorker performs when a message arrives
-def annotation_process(message: Message):
+def annotation_process(message_dict):
+    # message is a dict NOT type Message! Cannot use Message class methods.
     # {'type': 'publish',
     # 'topic': 'image_submitted',
     # 'event_id': 'IS_1',
     #  'payload': {'image_id': 'some_id',
     #              'path': 'photos\\some_id',
     #              'source': 'user_upload'}}
-    # do something with message
-    print(message.to_json()["payload"]["image_id"])
+
+    print(message_dict['payload']['path'])
 
 # Make a Queue where you want any messages to be stored for worker to work on
 annotation_service_queue = queue.Queue(10)
