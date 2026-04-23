@@ -53,6 +53,7 @@ class PhotoCliModule:
 
     def upload_photo_from_path(self, source_path: str, source: str = "user_upload") -> ImageSubmittedMessage:
         source_file = Path(source_path)
+        print(source_path)
 
         if not source_file.exists():
             raise FileNotFoundError(f"Photo does not exist: {source_path}")

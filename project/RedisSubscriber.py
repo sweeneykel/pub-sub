@@ -4,6 +4,7 @@ import queue
 from queue import Queue
 import redis
 import logging
+import json
 
 # move to main to configure for all modules
 logging.basicConfig(
@@ -42,14 +43,22 @@ class RedisSubscriber:
 
     def _run(self):
         while not self._stop_event.is_set():
+            # msg returns None if no message
             # unlike self.redis_ps_conn.listen(), .get_message() will periodically check _stop_event
             msg = self.redis_ps_conn.get_message()
+
             # do not include control messages in queue (like subscribe or unsubscribe)
-            if msg['type'] == 'message':
-                logger.info(f"{self.module_name} received {msg} on {self.registered_sub_channel}")
-                self.input_queue.put(msg)
-                logger.info(f"{self._thread} added {msg} to {self.input_queue}")
-            else:
-                time.sleep(0.01)
+            if msg is None:
+                # check if self._stop_event.is_set()
+                continue
+
+            if msg["type"] != "message":
+                # check if self._stop_event.is_set()
+                continue
+            logger.info(f"{self.module_name} received {msg} on {self.registered_sub_channel}")
+            payload = json.loads(msg["data"])
+            self.input_queue.put(payload)
+            logger.info(f"{self._thread} added {msg} to {self.input_queue}")
+
 
 

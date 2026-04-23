@@ -21,7 +21,7 @@ class ImageSubmittedMessage(Message):
         ImageSubmittedMessage._counter += 1
         return f"IS_{ImageSubmittedMessage._counter}"
 
-class InferenceCompletedMessage(Message):
+class AnnotationCompletedMessage(Message):
     _counter = 0
 
     def __init__(self, image_metadata: str, annotation_metadata: str):
@@ -35,8 +35,8 @@ class InferenceCompletedMessage(Message):
         return "inference_completed"
 
     def _generate_event_id(self):
-        InferenceCompletedMessage._counter += 1
-        return f"IC_{InferenceCompletedMessage._counter}"
+        AnnotationCompletedMessage._counter += 1
+        return f"IC_{AnnotationCompletedMessage._counter}"
 
 class AnnotationStoredMessage(Message):
     _counter = 0
