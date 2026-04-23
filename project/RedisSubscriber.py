@@ -43,11 +43,11 @@ class RedisSubscriber:
 
     def _run(self):
         while not self._stop_event.is_set():
-            # msg returns None if no message
-            # unlike self.redis_ps_conn.listen(), .get_message() will periodically check _stop_event
+
+            # self.redis_ps_conn.get_message() checks VERY FREQUENTLY!!!
+            # msg returns None if no message. unlike self.redis_ps_conn.listen(), .get_message() will periodically check _stop_event
             msg = self.redis_ps_conn.get_message()
 
-            # do not include control messages in queue (like subscribe or unsubscribe)
             if msg is None:
                 # check if self._stop_event.is_set()
                 continue
@@ -55,10 +55,13 @@ class RedisSubscriber:
             if msg["type"] != "message":
                 # check if self._stop_event.is_set()
                 continue
-            logger.info(f"{self.module_name} received {msg} on {self.registered_sub_channel}")
+
+            # Only when actionable message arrives
+            # msg in RedisSubscriber is dict
+            logger.info(f"{self.module_name} received a message from {self.registered_sub_channel}")
             payload = json.loads(msg["data"])
+            # payload in RedisSubscriber is dict
             self.input_queue.put(payload)
-            logger.info(f"{self._thread} added {msg} to {self.input_queue}")
 
 
 

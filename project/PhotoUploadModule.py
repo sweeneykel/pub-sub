@@ -25,7 +25,7 @@ class PhotoCliModule:
         "image/webp",
     }
 
-    def __init__(self, redis_client: redis.Redis, upload_dir: str = "uploads"):
+    def __init__(self, redis_client: redis.Redis, upload_dir: str = "project/photos"):
         self.upload_dir = Path(upload_dir)
         self.upload_dir.mkdir(parents=True, exist_ok=True)
 
@@ -114,8 +114,6 @@ class PhotoCliModule:
 
         try:
             message = self.upload_photo_from_path(photo_path)
-            print("Uploaded photo and published event:")
-            print(message.to_json())
         except Exception as exc:
             print(f"Upload failed: {exc}")
 
@@ -167,7 +165,7 @@ class PhotoCliModule:
             raise ValueError(f"Unsupported MIME type: {mime_type}")
 
     def _save_photo(self, source_file: Path, image_id: str) -> Path:
-        destination = self.upload_dir / f"{image_id}{source_file.suffix.lower()}"
+        destination = self.upload_dir / "photo_uploads" / f"{image_id}{source_file.suffix.lower()}"
         shutil.copy2(source_file, destination)
         return destination
 
@@ -178,6 +176,3 @@ class PhotoCliModule:
         print("2) Find k similar items by topic")
         print("3) Find k similar items by image")
         print("4) Exit")
-
-
-

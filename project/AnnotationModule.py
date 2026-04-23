@@ -10,8 +10,14 @@ from message_inheritance import AnnotationCompletedMessage
 
 # This is the primary function of the Annotation Module and is what the QueueWorker performs when a message arrives
 def annotation_process(message: Message):
-    print("Received Message")
-    print(message.to_json())
+    # {'type': 'publish',
+    # 'topic': 'image_submitted',
+    # 'event_id': 'IS_1',
+    #  'payload': {'image_id': 'some_id',
+    #              'path': 'photos\\some_id',
+    #              'source': 'user_upload'}}
+    # do something with message
+    print(message.to_json()["payload"]["image_id"])
 
 # Make a Queue where you want any messages to be stored for worker to work on
 annotation_service_queue = queue.Queue(10)
@@ -26,5 +32,5 @@ annotation_service_worker = QueueWorker(annotation_service_queue, annotation_pro
 # tell the queue worker to begin
 annotation_service_worker.start()
 sleep(30)
-# close gracefully the worker
+# close the worker
 annotation_service_worker.stop()

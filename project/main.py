@@ -15,6 +15,7 @@ def main():
         decode_responses=True,
     )
 
+    # creates an instances of a class from PhotoUploadModule
     cli = PhotoCliModule(redis_client=redis_client)
     cli.run()
 
