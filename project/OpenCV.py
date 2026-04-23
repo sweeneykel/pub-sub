@@ -1,9 +1,9 @@
 import cv2
 
 #def annotation_process():
-image_path = ""
-upper_corner_x = 250
-upper_corner_y = 250
+image_path = input("Path of image: ").strip()
+upper_corner_x = 100
+upper_corner_y = 100
 lower_corner_x = 250
 lower_corner_y = 250
 annotation_label = "dog"
@@ -26,22 +26,12 @@ cv2.putText(rect1, annotation_label, (upper_corner_x, upper_corner_y), cv2.FONT_
 
 cv2.imshow("Rectangle", rect1)
 
-success = cv2.imwrite("annotated_uploads/boxed_image.jpg", img)
-if success:
-    print("Saved image")
-else:
-    print("Failed to save image")
+user_input = input("is this okay?").strip()
+
+if user_input == 'yes':
+    success = cv2.imwrite("annotated_uploads/boxed_image.jpg", rect1)
+    if success:
+        print("Saved image")
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-
-
-def get_user_annotation_input(self):
-    upper_corner_x = input("Enter upper corner x position: ").strip()
-    upper_corner_y = input("Enter upper corner y position: ").strip()
-    lower_corner_x = input("Enter lower corner x position: ").strip()
-    lower_corner_y = input("Enter lower corner y position: ").strip()
-
-    # TODO : should validate all coordinates that they are ints
-
-    return True

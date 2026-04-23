@@ -3,7 +3,7 @@ from time import sleep
 from QueueWorker import QueueWorker
 from RedisSubscriber import RedisSubscriber
 import redis
-from message import Message
+from AnnotationGUI import annotate_image
 
 from message_inheritance import ImageSubmittedMessage
 from message_inheritance import AnnotationCompletedMessage
@@ -17,8 +17,9 @@ def annotation_process(message_dict):
     #  'payload': {'image_id': 'some_id',
     #              'path': 'photos\\some_id',
     #              'source': 'user_upload'}}
+    annotation_metadata = annotate_image(message_dict['payload']['path'])
 
-    print(message_dict['payload']['path'])
+    print("annotation_metadata: ", annotation_metadata)
 
 # Make a Queue where you want any messages to be stored for worker to work on
 annotation_service_queue = queue.Queue(10)
@@ -32,6 +33,6 @@ annotation_service.register_sub_channel("image_submitted")
 annotation_service_worker = QueueWorker(annotation_service_queue, annotation_process)
 # tell the queue worker to begin
 annotation_service_worker.start()
-sleep(30)
+sleep(200)
 # close the worker
 annotation_service_worker.stop()
