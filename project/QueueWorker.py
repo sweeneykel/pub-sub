@@ -28,17 +28,23 @@ class QueueWorker:
 
     def _run(self):
         while not self._stop_event.is_set():
+            msg = None
             try:
-                msg = self.input_queue.get(timeout=1) # without timeout is blocking
-                # timeout makes that checks self._stop_event.is_set()
+                msg = self.input_queue.get(timeout=1)
                 self._process(msg)
-                # For each get() used to fetch a task, task_done() marks task as complete
-                self.input_queue.task_done()
-                logger.info(f"{self._thread} processed {msg}")
+                logger.info("%s processed %r", self._thread, msg)
 
             except queue.Empty:
-                logger.info(f"{self.input_queue} queue empty")
                 continue
+
+            except Exception:
+                logger.exception("Failed to process message: %r", msg)
+                # retry/drop/dead-letter policy goes here
+                # alternative implementations could be made. issue created.
+
+            finally:
+                if msg is not None:
+                    self.input_queue.task_done()
 
     def _process(self, msg):
         # placeholder for doing the action. Black box right now.
