@@ -1,9 +1,6 @@
 import queue
 import threading
 import logging
-import time
-from queue import Queue
-from time import sleep
 
 # move to main to configure for all modules
 logging.basicConfig(
@@ -35,7 +32,10 @@ class QueueWorker:
                 msg = self.input_queue.get(timeout=1) # without timeout is blocking
                 # timeout makes that checks self._stop_event.is_set()
                 self._process(msg)
+                # For each get() used to fetch a task, task_done() marks task as complete
+                self.input_queue.task_done()
                 logger.info(f"{self._thread} processed {msg}")
+
             except queue.Empty:
                 logger.info(f"{self.input_queue} queue empty")
                 continue
