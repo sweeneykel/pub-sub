@@ -18,8 +18,7 @@ def annotation_process(message_dict):
     #              'path': 'photos\\some_id',
     #              'source': 'user_upload'}}
     annotation_metadata = annotate_image(message_dict['payload']['path'])
-
-    print("annotation_metadata: ", annotation_metadata)
+    return True
 
 # Make a Queue where you want any messages to be stored for worker to work on
 annotation_service_queue = queue.Queue(10)

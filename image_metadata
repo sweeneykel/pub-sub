@@ -1,0 +1,10 @@
+image_metadata for image cell1: upper_corner_x: 75, upper_corner_y: 280, lower_corner_x: 275, lower_corner_y: 450, annotation_label: blue cell
+image_metadata for image cell2: upper_corner_x: 80, upper_corner_y: 210, lower_corner_x: 200, lower_corner_y: 325, annotation_label: red cell
+image_metadata for image cell3: upper_corner_x: 40, upper_corner_y: 120, lower_corner_x: 80, lower_corner_y: 180, annotation_label: cell with nucleus
+image_metadata for image cell4: upper_corner_x: 225, upper_corner_y: 325, lower_corner_x: 280, lower_corner_y: 375, annotation_label: cell aura
+image_metadata for image leaf1: upper_corner_x: 125, upper_corner_y: 300, lower_corner_x: 365, lower_corner_y: 475, annotation_label: aspen leaf
+image_metadata for image leaf2: upper_corner_x: 75, upper_corner_y: 150, lower_corner_x: 475, lower_corner_y: 650, annotation_label: maple leaf
+image_metadata for image medimage1: upper_corner_x: 60, upper_corner_y: 275, lower_corner_x: 250, lower_corner_y: 330, annotation_label: notebook
+image_metadata for image runner1: upper_corner_x: 190, upper_corner_y: 300, lower_corner_x: 275, lower_corner_y: 560, annotation_label: woods runner
+image_metadata for image runner2: upper_corner_x: 50, upper_corner_y: 180, lower_corner_x: 475, lower_corner_y: 700, annotation_label: track runner
+image_metadata for image runner3: upper_corner_x: 225, upper_corner_y: 175, lower_corner_x: 425, lower_corner_y: 890, annotation_label: city runner

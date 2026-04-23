@@ -99,23 +99,17 @@ def annotate_image(image_path: str):
 
             output_path = os.path.join("annotated_uploads", f"{name}_annotated{ext}")
             success = cv2.imwrite(output_path, preview)
-
-            annotation_metadata = {}
             if success:
                 print(f"Saved image to {output_path}")
+                print(f"image_metadata for image {name}: upper_corner_x: {upper_corner_x}, upper_corner_y: {upper_corner_y}, lower_corner_x: {lower_corner_x}, lower_corner_y: {lower_corner_y}, annotation_label: {annotation_label}")
                 #"image_metadata": image_metadata,
                 #"annotation_metadata": annotation_metadata,
-                annotation_metadata['upper_corner_x'] = upper_corner_x
-                annotation_metadata['upper_corner_y'] = upper_corner_y
-                annotation_metadata['lower_corner_x'] = lower_corner_x
-                annotation_metadata['lower_corner_y'] = lower_corner_y
-                annotation_metadata['annotation_label'] = annotation_label
 
             else:
                 print("Failed to save image.")
 
             cv2.destroyAllWindows()
-            return annotation_metadata
+            return success
 
         cv2.destroyWindow("Annotation Preview")
 
