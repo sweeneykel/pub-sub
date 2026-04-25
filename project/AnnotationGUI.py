@@ -1,6 +1,7 @@
 import os
 import cv2
 
+# Helper function: adds grid to image so that it is easier to judge where box should be
 def add_coordinate_grid(img, step=50):
     grid = img.copy()
     height, width = grid.shape[:2]
@@ -33,27 +34,26 @@ def add_coordinate_grid(img, step=50):
 
     return grid
 
-
+# primary function for Annotation Module: displays image, gathers points from user, draws box
+# basic functionality from OpenCV example
 def annotate_image(image_path: str):
-    #image_path = input("image_path: ").strip()
+    # takes the path listed in ImageSubmittedMessage(Message)
     img = cv2.imread(image_path)
 
     if img is None:
         print("Could not load image.")
         return
 
+    # resize image
     original_height, original_width = img.shape[:2]
-
     new_width = 600
     aspect_ratio = new_width / original_width
     new_height = int(original_height * aspect_ratio)
     img = cv2.resize(img, (new_width, new_height))
-
     height, width = img.shape[:2]
-    print(f"Image size: width={width}, height={height}")
-    # x: 0 to width - 1
-    # y: 0 to height - 1
+    #print(f"Image size: width={width}, height={height}")
 
+    # prompts user to draw a box around item in image
     while True:
         grid_img = add_coordinate_grid(img, step=50)
         cv2.imshow("Coordinate Grid", grid_img)
@@ -67,16 +67,9 @@ def annotate_image(image_path: str):
 
         preview = grid_img.copy()
 
-        cv2.rectangle(
-            preview,
-            (upper_corner_x, upper_corner_y),
-            (lower_corner_x, lower_corner_y),
-            (0, 255, 255),
-            2,
-        )
-        cv2.putText(
-            preview,
-            annotation_label,
+        # draws rectangle around item
+        cv2.rectangle(preview,(upper_corner_x, upper_corner_y),(lower_corner_x, lower_corner_y),(0, 255, 255),2,)
+        cv2.putText(preview,annotation_label,
             (upper_corner_x, max(upper_corner_y - 10, 20)),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.7,
@@ -90,14 +83,14 @@ def annotate_image(image_path: str):
 
         confirm = input("Is this okay? (y/n): ").strip().lower()
         if confirm == "y":
-            os.makedirs("annotated_uploads", exist_ok=True)
+            os.makedirs("project/annotated_uploads", exist_ok=True)
 
             base_name = os.path.basename(image_path)
             name, ext = os.path.splitext(base_name)
             if not ext:
                 ext = ".jpg"
 
-            output_path = os.path.join("annotated_uploads", f"{name}_annotated{ext}")
+            output_path = os.path.join("project/annotated_uploads", f"{name}_annotated{ext}")
             success = cv2.imwrite(output_path, preview)
             if success:
                 print(f"Saved image to {output_path}")

@@ -8,3 +8,9 @@ image_metadata for image medimage1: upper_corner_x: 60, upper_corner_y: 275, low
 image_metadata for image runner1: upper_corner_x: 190, upper_corner_y: 300, lower_corner_x: 275, lower_corner_y: 560, annotation_label: woods runner
 image_metadata for image runner2: upper_corner_x: 50, upper_corner_y: 180, lower_corner_x: 475, lower_corner_y: 700, annotation_label: track runner
 image_metadata for image runner3: upper_corner_x: 225, upper_corner_y: 175, lower_corner_x: 425, lower_corner_y: 890, annotation_label: city runner
+
+
+uploader
+image proc
+embedded
+mango db

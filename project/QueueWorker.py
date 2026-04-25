@@ -19,6 +19,7 @@ class QueueWorker:
         # vs process_function() call it right now
         self._process_function = process_function
 
+
     def start(self):
         self._thread.start()
         logger.info(f"{self._thread} started")
@@ -50,8 +51,6 @@ class QueueWorker:
                 if msg is not None:
                     self.input_queue.task_done()
 
-
     def _process(self, msg):
         # TODO: validate this function
         self._process_function(msg)
-

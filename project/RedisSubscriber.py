@@ -1,7 +1,5 @@
 import threading
-import time
 import queue
-from queue import Queue
 import redis
 import logging
 import json
@@ -62,6 +60,3 @@ class RedisSubscriber:
             payload = json.loads(msg["data"])
             # payload in RedisSubscriber is dict
             self.input_queue.put(payload)
-
-
-
