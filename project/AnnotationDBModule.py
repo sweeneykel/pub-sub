@@ -2,24 +2,24 @@ import queue
 from pymongo import MongoClient
 from RedisSubscriber import RedisSubscriber
 import redis
-from QueueWorker import QueueWorker
+from QueueWorker import AnnotationDBWorker
 from time import sleep
 from RedisPublisher import RedisPublisher
-from message_inheritance import AnnotationStoredMessage
-
 from logger import make_logger
+from message import AnnotationStoredMessage
 
 logger = make_logger()
-
 
 # This is the primary function of the Annotation DB Module and is what the QueueWorker performs when a message arrives
 def mongo_db_process(message_dict, mong_db_service_pub):
     # message is a dict NOT type Message! Cannot use Message class methods.
     try:
-
+        # collection.insert_one from mongodb includes an ID in message_dict['payload']
+        # make a copy
+        message_dict_copy = message_dict['payload'].copy()
         collection.insert_one(message_dict['payload'])
-        #annotation_stored_msg = AnnotationStoredMessage(message_dict['payload'])
-        #mong_db_service_pub.publish_message("annotation_stored", annotation_stored_msg)
+        msg = AnnotationStoredMessage(message_dict_copy)
+        mong_db_service_pub.publish_message("annotation_stored", AnnotationStoredMessage(message_dict_copy))
     except Exception:
         logger.exception("Failed to process message: %r", message_dict)
 
@@ -43,14 +43,11 @@ client = MongoClient("mongodb://localhost:27017/")
 db = client["annotation_db_01"]
 collection = db["table_01"]
 
-# Make a queueworker
-# queueworkers always get a queue to work out of
-# a function/task specific to the module to complete
-# a channel to publish when function/task is complete
-annotation_service_worker = QueueWorker(mongo_db_queue, mongo_db_process, mongo_db_service_pub)
+# Make a AnnotationDBWorker
+annotation_service_worker = AnnotationDBWorker(mongo_db_queue, mongo_db_process, mongo_db_service_pub, collection)
 
 # tell the queue worker to begin
 annotation_service_worker.start()
-sleep(30)
+sleep(60)
 # close the worker
 annotation_service_worker.stop()

@@ -6,7 +6,7 @@ from pathlib import Path
 import redis
 
 from RedisPublisher import RedisPublisher
-from message_inheritance import (
+from message import (
     ImageSubmittedMessage,
     QueryImagesSubmitted,
     QueryTopicsSubmitted,

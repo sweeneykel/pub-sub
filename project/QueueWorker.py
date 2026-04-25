@@ -56,3 +56,14 @@ class AnnotationWorker(QueueWorker):
     def _process(self, msg):
         self._process_function(msg, self.publisher)
 
+
+class AnnotationDBWorker(QueueWorker):
+    def __init__(self, input_queue, process_function, publisher, collection):
+        super().__init__(input_queue)
+        self.publisher = publisher
+        self._process_function = process_function
+        self.collection = collection
+
+    def _process(self, msg):
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        self._process_function(msg, self.publisher)

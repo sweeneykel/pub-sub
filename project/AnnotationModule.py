@@ -6,6 +6,7 @@ import redis
 from AnnotationGUI import user_annotates_image
 from logger import make_logger
 from RedisPublisher import RedisPublisher
+from message import AnnotationCompletedMessage
 
 logger = make_logger()
 
@@ -15,9 +16,9 @@ def annotation_process(message_dict, annot_service_pub):
     try:
         annotation_metadata = user_annotates_image(message_dict['payload']['path'])
         print("This is the annotation_metadata: ", annotation_metadata)
-        # image_metadata = message_dict['payload']
-        # inference_complete_msg = AnnotationCompletedMessage(image_metadata, annotation_metadata)
-        # annot_service_pub.publish_message("inference_completed", inference_complete_msg)
+        image_metadata = message_dict['payload']
+        inference_complete_msg = AnnotationCompletedMessage(image_metadata, annotation_metadata)
+        annot_service_pub.publish_message("inference_completed", inference_complete_msg)
 
     except Exception:
         logger.exception("Failed to process message: %r", message_dict)
@@ -37,14 +38,11 @@ annotation_service_pub = RedisPublisher("Annotation Service Publisher", redis_cl
 # create a channel called "inference_completed"
 annotation_service_pub.register_pub_channel("inference_completed")
 
-# Make a queueworker
-# queueworkers always get a queue to work out of
-# a function/task specific to the module to complete
-# a channel to publish when function/task is complete
+# Make a AnnotationWorker
 annotation_service_worker = AnnotationWorker(annotation_service_sub_queue, annotation_process, annotation_service_pub)
 
 # tell the queue worker to begin
 annotation_service_worker.start()
-sleep(30)
+sleep(60)
 # close the worker
 annotation_service_worker.stop()
