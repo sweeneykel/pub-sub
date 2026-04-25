@@ -36,9 +36,10 @@ def add_coordinate_grid(img, step=50):
 
 # primary function for Annotation Module: displays image, gathers points from user, draws box
 # basic functionality from OpenCV example
-def annotate_image(image_path: str):
+def user_annotates_image(image_path: str):
     # takes the path listed in ImageSubmittedMessage(Message)
     img = cv2.imread(image_path)
+    annotation_metadata = {}
 
     if img is None:
         print("Could not load image.")
@@ -97,13 +98,20 @@ def annotate_image(image_path: str):
                 print(f"image_metadata for image {name}: upper_corner_x: {upper_corner_x}, upper_corner_y: {upper_corner_y}, lower_corner_x: {lower_corner_x}, lower_corner_y: {lower_corner_y}, annotation_label: {annotation_label}")
                 #"image_metadata": image_metadata,
                 #"annotation_metadata": annotation_metadata,
-
+                annotation_metadata["name"] = name
+                annotation_metadata["upper_corner_x"] = upper_corner_x
+                annotation_metadata["upper_corner_y"] = upper_corner_y
+                annotation_metadata["lower_corner_x"] = lower_corner_x
+                annotation_metadata["lower_corner_y"] = lower_corner_y
+                annotation_metadata["annotation_label"] = annotation_label
             else:
                 print("Failed to save image.")
 
+            # for accepted case, will exit
             cv2.destroyAllWindows()
-            return success
+            return annotation_metadata
 
+        # for rejected case, will try again
         cv2.destroyWindow("Annotation Preview")
 
 

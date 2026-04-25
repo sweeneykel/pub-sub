@@ -1,24 +1,19 @@
 import queue
 import threading
-import logging
 
-# move to main to configure for all modules
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(threadName)s] %(message)s"
-)
-# creates a logger named after module
-logger = logging.getLogger(__name__)
+from logger import make_logger
+
+logger = make_logger()
 
 class QueueWorker:
-    def __init__(self, input_queue: queue.Queue, process_function):
+    def __init__(self, input_queue: queue.Queue, process_function, service_pub_channel):
         self.input_queue = input_queue
         self._stop_event = threading.Event()
         self._thread = threading.Thread(target=self._run, daemon=True)
         # here is the function object itself; store it and call it later
         # vs process_function() call it right now
         self._process_function = process_function
-
+        self._service_pub_channel = service_pub_channel
 
     def start(self):
         self._thread.start()
@@ -53,4 +48,4 @@ class QueueWorker:
 
     def _process(self, msg):
         # TODO: validate this function
-        self._process_function(msg)
+        self._process_function(msg, self._service_pub_channel)

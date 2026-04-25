@@ -1,17 +1,12 @@
 import redis
 from message import Message
-import logging
 
 # r is Redis Client. Thread safe and okay to share across modules.
 # r = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
-# move to main to configure for all modules
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(threadName)s] %(message)s"
-)
-# creates a logger named after module
-logger = logging.getLogger(__name__)
+from logger import make_logger
+
+logger = make_logger()
 
 class RedisPublisher:
     def __init__(self, module_name: str, redis_client: redis.Redis):
