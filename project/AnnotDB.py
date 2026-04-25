@@ -1,21 +1,21 @@
+from RedisSubscriber import RedisSubscriber
+from QueueWorker import AnnotationDBWorker
+from RedisPublisher import RedisPublisher
+from message import AnnotationStoredMessage
+
+import redis
+from logger import make_logger
+from time import sleep
 import queue
 from pymongo import MongoClient
-from RedisSubscriber import RedisSubscriber
-import redis
-from QueueWorker import AnnotationDBWorker
-from time import sleep
-from RedisPublisher import RedisPublisher
-from logger import make_logger
-from message import AnnotationStoredMessage
 
 logger = make_logger()
 
 # This is the primary function of the Annotation DB Module and is what the QueueWorker performs when a message arrives
 def mongo_db_process(message_dict, mong_db_service_pub):
-    # message is a dict NOT type Message! Cannot use Message class methods.
     try:
+        # message is a dict NOT type Message! Cannot use Message class methods.
         # collection.insert_one from mongodb includes an ID in message_dict['payload']
-        # make a copy
         message_dict_copy = message_dict['payload'].copy()
         collection.insert_one(message_dict['payload'])
         msg = AnnotationStoredMessage(message_dict_copy)

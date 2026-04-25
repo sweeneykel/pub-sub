@@ -65,5 +65,16 @@ class AnnotationDBWorker(QueueWorker):
         self.collection = collection
 
     def _process(self, msg):
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!")
         self._process_function(msg, self.publisher)
+
+
+class VectorDBWorker(QueueWorker):
+    def __init__(self, input_queue, process_function, publisher, index, metadata_store):
+        super().__init__(input_queue)
+        self.publisher = publisher
+        self._process_function = process_function
+        self.index = index
+        self.metadata_store = metadata_store
+
+    def _process(self, msg):
+        self._process_function(msg, self.publisher, self.index, self.metadata_store)

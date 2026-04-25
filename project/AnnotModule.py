@@ -3,7 +3,7 @@ from time import sleep
 from QueueWorker import AnnotationWorker
 from RedisSubscriber import RedisSubscriber
 import redis
-from AnnotationGUI import user_annotates_image
+from AnnotGUI import user_annotates_image
 from logger import make_logger
 from RedisPublisher import RedisPublisher
 from message import AnnotationCompletedMessage
