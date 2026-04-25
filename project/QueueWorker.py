@@ -6,14 +6,10 @@ from logger import make_logger
 logger = make_logger()
 
 class QueueWorker:
-    def __init__(self, input_queue: queue.Queue, process_function, service_pub_channel):
+    def __init__(self, input_queue: queue.Queue):
         self.input_queue = input_queue
         self._stop_event = threading.Event()
         self._thread = threading.Thread(target=self._run, daemon=True)
-        # here is the function object itself; store it and call it later
-        # vs process_function() call it right now
-        self._process_function = process_function
-        self._service_pub_channel = service_pub_channel
 
     def start(self):
         self._thread.start()
@@ -47,5 +43,16 @@ class QueueWorker:
                     self.input_queue.task_done()
 
     def _process(self, msg):
-        # TODO: validate this function
-        self._process_function(msg, self._service_pub_channel)
+        # self._process_function(msg, self._service_pub_channel)
+        raise NotImplementedError
+
+
+class AnnotationWorker(QueueWorker):
+    def __init__(self, input_queue, process_function, publisher):
+        super().__init__(input_queue)
+        self._process_function = process_function
+        self.publisher = publisher
+
+    def _process(self, msg):
+        self._process_function(msg, self.publisher)
+

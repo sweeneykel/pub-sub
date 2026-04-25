@@ -1,12 +1,11 @@
 import queue
 from time import sleep
-from QueueWorker import QueueWorker
+from QueueWorker import AnnotationWorker
 from RedisSubscriber import RedisSubscriber
 import redis
 from AnnotationGUI import user_annotates_image
 from logger import make_logger
 from RedisPublisher import RedisPublisher
-from message_inheritance import AnnotationCompletedMessage
 
 logger = make_logger()
 
@@ -42,7 +41,7 @@ annotation_service_pub.register_pub_channel("inference_completed")
 # queueworkers always get a queue to work out of
 # a function/task specific to the module to complete
 # a channel to publish when function/task is complete
-annotation_service_worker = QueueWorker(annotation_service_sub_queue, annotation_process, annotation_service_pub)
+annotation_service_worker = AnnotationWorker(annotation_service_sub_queue, annotation_process, annotation_service_pub)
 
 # tell the queue worker to begin
 annotation_service_worker.start()
