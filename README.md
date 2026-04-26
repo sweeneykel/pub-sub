@@ -1,7 +1,7 @@
 # pub-sub
 
 ## Video: Architecture walkthrough and Demo
-[Video Here](https://drive.google.com/file/d/1bs3XysukzUeh8NRAmNYxszCUYcz9gQlb/view?usp=drive_link)
+[Video - available for @bu.edu](https://drive.google.com/file/d/1bs3XysukzUeh8NRAmNYxszCUYcz9gQlb/view?usp=sharing)
 
 ## Goal
 
