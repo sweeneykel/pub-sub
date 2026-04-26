@@ -52,65 +52,53 @@ def vector_db_process(message_dict, vector_db_service_pub, index, faiss_id_to_me
         logger.exception("Failed to process message: %r", message_dict)
 
 
-# Connect to same Redis client as other services
-redis_client = redis.Redis(
-    host="localhost",
-    port=6379,
-    decode_responses=True,
-)
+# Keep imports and vector_db_process as-is above this point.
 
-
-# Queue for Vector DB worker
-vector_db_queue = queue.Queue(10)
-
-
-# Subscriber: listen for completed embeddings
-vector_db_service_sub = RedisSubscriber(
-    "Vector Database",
-    vector_db_queue,
-    redis_client,
-)
-vector_db_service_sub.register_sub_channel("embedding_created")
-
-
-# Publisher: announce stored embeddings
-vector_db_service_pub = RedisPublisher(
-    "Vector DB Publisher",
-    redis_client,
-)
-vector_db_service_pub.register_pub_channel("embedding_stored")
-
-
-# Set up Faiss index
-# embedding_dimension should match whatever AnnotModule / embedding module produces.
 embedding_dimension = 5
 
-# Basic exact-search index to start with.
-# Other options later: IndexIVFFlat, IndexHNSWFlat, IndexFlatIP.
-# Create a database for <embedding_dimension>-number vectors, and search by closest Euclidean distance.
-index = faiss.IndexFlatL2(embedding_dimension)
+
+def create_vector_db_service():
+    redis_client = redis.Redis(
+        host="localhost",
+        port=6379,
+        decode_responses=True,
+    )
+
+    vector_db_queue = queue.Queue(10)
+
+    vector_db_service_sub = RedisSubscriber(
+        "Vector Database",
+        vector_db_queue,
+        redis_client,
+    )
+    vector_db_service_sub.register_sub_channel("embedding_created")
+
+    vector_db_service_pub = RedisPublisher(
+        "Vector DB Publisher",
+        redis_client,
+    )
+    vector_db_service_pub.register_pub_channel("embedding_stored")
+
+    index = faiss.IndexFlatL2(embedding_dimension)
+    faiss_id_to_metadata = {}
+
+    vector_db_worker = VectorDBWorker(
+        vector_db_queue,
+        vector_db_process,
+        vector_db_service_pub,
+        index,
+        faiss_id_to_metadata,
+    )
+
+    return vector_db_worker
 
 
-# Metadata side table
-# Faiss stores vectors, but not rich metadata.
-# This could start as an in-memory dict and later move to MongoDB / JSON / SQLite.
-# faiss_id_to_metadata = {
-#     0: {"image_id": "...", "path": "...", ...},
-#     1: {"image_id": "...", "path": "...", ...},
-# }
-faiss_id_to_metadata = {}
-
-# Worker
-vector_db_worker = VectorDBWorker(
-    vector_db_queue,
-    vector_db_process,
-    vector_db_service_pub,
-    index,
-    faiss_id_to_metadata,
-)
+def main():
+    vector_db_worker = create_vector_db_service()
+    vector_db_worker.start()
+    sleep(60)
+    vector_db_worker.stop()
 
 
-# Start service
-vector_db_worker.start()
-sleep(60)
-vector_db_worker.stop()
+if __name__ == "__main__":
+    main()

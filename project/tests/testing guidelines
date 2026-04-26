@@ -1,0 +1,39 @@
+General Testing Rules
+
+Goal
+A test is a small claim about how the code should behave.\
+Your unit test should focus on your function’s decisions. (Not if Redis works or some other python method functions correctly)
+
+Style
+Good test names do most of the explaining.
+def test_name_that_describes_behavior_being_checked():
+    # Arrange: create the world for the test
+
+    # Act: call the thing being tested
+
+    # Assert: check what should be true afterward
+
+Designing Functions for Testing
+choose either: does the function have one responsibility, or is it coordinating several responsibilities?
+If a function is hard to test, ask whether it is doing too much.
+If a function is easy to test but has several steps, it may just be a good orchestrator.
+
+Large coordinating functions can be decomposed to read like a checklist
+def upload_photo_from_path(self, photo_path, source="user_upload"):
+    source_file = self._get_valid_upload_file(photo_path)
+    image_id = self._generate_image_id()
+    saved_path = self._save_photo(source_file, image_id)
+    message = self._build_image_submitted_message(image_id, saved_path, source)
+    self._publish_image_submitted(message)
+    return message
+
+Testing coordinating Functions
+mostly test the public function’s behavior, and selectively test checklist steps only when they contain meaningful logic.
+For upload_photo_from_path, the public function is the contract. Other code does not care whether it uses 2 helper
+methods or 10 helper methods internally. It cares that:
+given a valid photo path,
+it saves the photo,
+creates the right message,
+publishes the message,
+and returns the message.
+
