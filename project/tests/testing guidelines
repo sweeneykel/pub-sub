@@ -1,7 +1,8 @@
 General Testing Rules
 
 Goal
-A test is a small claim about how the code should behave.\
+A test is a small claim about how the code should behave.
+An explicit list of the assumptions and expectations
 Your unit test should focus on your function’s decisions. (Not if Redis works or some other python method functions correctly)
 
 Style

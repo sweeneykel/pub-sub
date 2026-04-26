@@ -89,7 +89,7 @@ class AnnotationStoredMessage(Message):
 class EmbeddingCreatedMessage(Message):
     _counter = 0
 
-    def __init__(self, image_metadata: str, embedding_data: str):
+    def __init__(self, image_metadata: str, embedding_data: list[float]):
         payload = {
             "image_metadata": image_metadata,
             "embedding_data": embedding_data,
