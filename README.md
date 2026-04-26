@@ -1,5 +1,8 @@
 # pub-sub
 
+## Video: Architecture walkthrough and Demo
+[Video Here](https://drive.google.com/file/d/1bs3XysukzUeh8NRAmNYxszCUYcz9gQlb/view?usp=drive_link)
+
 ## Goal
 
 This project is an asynchronous pub-sub prototype for image upload, image annotation, metadata storage, vector embedding storage, and image/topic search workflows.
